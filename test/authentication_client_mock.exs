@@ -1,5 +1,5 @@
-defmodule HTTPoison.Response do
-  defstruct ~w[body headers status_code]a
+defmodule Tesla.Env do
+  defstruct ~w[body headers status]a
 end
 
 defmodule AuthenticationClientMock do
@@ -12,14 +12,14 @@ defmodule AuthenticationClientMock do
   end
 
   defp failed_response do
-    %HTTPoison.Response{
+    %Tesla.Env{
       body: "{\"error\":\"invalid_client\",\"error_description\":\"Invalid client\"}",
-      status_code: 400
+      status: 400
     }
   end
 
   defp successful_response do
-    %HTTPoison.Response{
+    %Tesla.Env{
       body:
         "{\"access_token\":\"access_token\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"refresh_token\":\"refresh_token\",\"scope\":\"playlist-read-private\"}",
       headers: [
@@ -40,7 +40,7 @@ defmodule AuthenticationClientMock do
         {"X-Content-Type-Options", "nosniff"},
         {"Strict-Transport-Security", "max-age=31536000;"}
       ],
-      status_code: 200
+      status: 200
     }
   end
 end

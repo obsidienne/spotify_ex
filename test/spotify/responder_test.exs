@@ -39,17 +39,17 @@ defmodule Spotify.ResponderTest do
                too_many_requests_error_expect()
     end
 
-    test "with arbitrary HTTPoison error" do
-      assert GenericMock.some_endpoint({:error, %HTTPoison.Error{reason: :timeout}}) ==
+    test "with arbitrary Tesla error" do
+      assert GenericMock.some_endpoint({:error, %Tesla.Error{reason: :timeout}}) ==
                {:error, :timeout}
     end
   end
 
   defp too_many_requests_error(retry_after_value, header_name) do
     {:error,
-     %HTTPoison.Response{
+     %Tesla.Env{
        body: Poison.encode!(%{error: %{message: "API rate limit exceeded", status: 429}}),
-       status_code: 429,
+       status: 429,
        headers: [{header_name, Integer.to_string(retry_after_value)}]
      }}
   end
@@ -63,14 +63,14 @@ defmodule Spotify.ResponderTest do
   end
 
   defp error do
-    {:error, %HTTPoison.Response{body: Poison.encode!(%{error: "foo"}), status_code: 400}}
+    {:error, %Tesla.Env{body: Poison.encode!(%{error: "foo"}), status: 400}}
   end
 
   defp success_empty_body do
-    {:ok, %HTTPoison.Response{body: "", status_code: 200}}
+    {:ok, %Tesla.Env{body: "", status: 200}}
   end
 
   defp success_with_body do
-    {:ok, %HTTPoison.Response{body: Poison.encode!(%{name: "foo"}), status_code: 200}}
+    {:ok, %Tesla.Env{body: Poison.encode!(%{name: "foo"}), status: 200}}
   end
 end

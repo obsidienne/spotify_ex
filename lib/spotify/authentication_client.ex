@@ -7,13 +7,13 @@ defmodule Spotify.AuthenticationClient do
     Credentials
   }
 
-  alias HTTPoison.{
+  alias Tesla.{
     Error,
-    Response
+    Env
   }
 
   def post(params) do
-    with {:ok, %Response{status_code: _code, body: body}} <- AuthRequest.post(params),
+    with {:ok, %Env{status: _code, body: body}} <- AuthRequest.post(params),
          {:ok, response} <- Poison.decode(body) do
       case response do
         %{"error_description" => error} ->

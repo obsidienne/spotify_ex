@@ -39,15 +39,11 @@ defmodule Spotify.Authorization do
 
   @doc false
   def scoped_auth do
-    "https://accounts.spotify.com/authorize?client_id=#{Spotify.client_id()}&response_type=code&redirect_uri=#{
-      Spotify.callback_url()
-    }&scope=#{scopes()}"
+    "https://accounts.spotify.com/authorize?client_id=#{Spotify.client_id()}&response_type=code&redirect_uri=#{Spotify.callback_url()}&scope=#{scopes()}"
   end
 
   @doc false
   def scopeless_auth do
-    "https://accounts.spotify.com/authorize?client_id=#{Spotify.client_id()}&response_type=code&redirect_uri=#{
-      Spotify.callback_url()
-    }"
+    "https://accounts.spotify.com/authorize?client_id=#{Spotify.client_id()}&response_type=code&redirect_uri=#{Spotify.callback_url()}"
   end
 end

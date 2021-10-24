@@ -13,15 +13,13 @@ defmodule Spotify.Responder do
 
   defmacro __using__(_) do
     quote do
-      def handle_response({:ok, %HTTPoison.Response{status_code: code, body: ""}})
+      def handle_response({:ok, %Tesla.Env{status: code, body: ""}})
           when code in 200..299,
           do: :ok
 
       # special handling for 'too many requests' status
       # in order to know when to retry
-      def handle_response(
-            {message, %HTTPoison.Response{status_code: 429, body: body, headers: headers}}
-          ) do
+      def handle_response({message, %Tesla.Env{status: 429, body: body, headers: headers}}) do
         {retry_after, ""} =
           headers
           |> Enum.find(fn {key, value} -> String.downcase(key) == "retry-after" end)
@@ -31,18 +29,18 @@ defmodule Spotify.Responder do
         {message, Map.put(Poison.decode!(body), "meta", %{"retry_after" => retry_after})}
       end
 
-      def handle_response({message, %HTTPoison.Response{status_code: code, body: body}})
+      def handle_response({message, %Tesla.Env{status: code, body: body}})
           when code in 400..499 do
         {message, Poison.decode!(body)}
       end
 
-      def handle_response({:ok, %HTTPoison.Response{status_code: _code, body: body}}) do
+      def handle_response({:ok, %Tesla.Env{status: _code, body: body}}) do
         response = body |> Poison.decode!() |> build_response
 
         {:ok, response}
       end
 
-      def handle_response({:error, %HTTPoison.Error{reason: reason}}) do
+      def handle_response({:error, %Tesla.Error{reason: reason}}) do
         {:error, reason}
       end
     end

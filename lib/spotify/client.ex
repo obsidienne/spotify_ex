@@ -2,30 +2,46 @@ defmodule Spotify.Client do
   @moduledoc false
 
   def get(conn_or_creds, url) do
-    HTTPoison.get(url, get_headers(conn_or_creds))
+    client = get_headers(conn_or_creds)
+    Tesla.get(client, url)
   end
 
   def put(conn_or_creds, url, body \\ "") do
-    HTTPoison.put(url, body, put_headers(conn_or_creds))
+    client = put_headers(conn_or_creds)
+    Tesla.put(client, url, body)
   end
 
   def post(conn_or_creds, url, body \\ "") do
-    HTTPoison.post(url, body, post_headers(conn_or_creds))
+    client = post_headers(conn_or_creds)
+    Tesla.post(client, url, body)
   end
 
   def delete(conn_or_creds, url) do
-    HTTPoison.delete(url, delete_headers(conn_or_creds))
+    client = delete_headers(conn_or_creds)
+    Tesla.delete(client, url)
   end
 
   def get_headers(conn_or_creds) do
-    [{"Authorization", "Bearer #{access_token(conn_or_creds)}"}]
+    middleware = [
+      {Tesla.Middleware.Headers,
+       [
+         {"Authorization", "Bearer #{access_token(conn_or_creds)}"}
+       ]}
+    ]
+
+    Tesla.client(middleware)
   end
 
   def put_headers(conn_or_creds) do
-    [
-      {"Authorization", "Bearer #{access_token(conn_or_creds)}"},
-      {"Content-Type", "application/json"}
+    middleware = [
+      {Tesla.Middleware.Headers,
+       [
+         {"Authorization", "Bearer #{access_token(conn_or_creds)}"},
+         {"Content-Type", "application/json"}
+       ]}
     ]
+
+    Tesla.client(middleware)
   end
 
   defp access_token(conn_or_creds) do
