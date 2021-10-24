@@ -32,5 +32,3 @@ import_config "spotify.exs"
 
 if Mix.env() != :docs, do: import_config("#{Mix.env()}.exs")
 config :spotify_ex, auth_client: Spotify.Authentication
-
-config :tesla, adapter: Tesla.Adapter.Hackney

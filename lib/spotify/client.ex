@@ -28,8 +28,9 @@ defmodule Spotify.Client do
          {"Authorization", "Bearer #{access_token(conn_or_creds)}"}
        ]}
     ]
+    adapter = {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
 
-    Tesla.client(middleware)
+    Tesla.client(middleware, adapter)
   end
 
   def put_headers(conn_or_creds) do
@@ -40,8 +41,8 @@ defmodule Spotify.Client do
          {"Content-Type", "application/json"}
        ]}
     ]
-
-    Tesla.client(middleware)
+    adapter = {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
+    Tesla.client(middleware, adapter)
   end
 
   defp access_token(conn_or_creds) do
