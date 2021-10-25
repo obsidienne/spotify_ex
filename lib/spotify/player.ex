@@ -261,7 +261,7 @@ defmodule Spotify.Player do
     {query_params, body_params} = Keyword.split(params, [:device_id])
 
     url = play_url(query_params)
-    body = body_params |> Enum.into(%{}) |> Poison.encode!()
+    body = body_params |> Enum.into(%{}) |> Jason.encode!()
 
     conn |> Client.put(url, body) |> handle_response()
   end
@@ -305,7 +305,7 @@ defmodule Spotify.Player do
   """
   def transfer_playback(conn, device_ids, params \\ []) do
     url = player_url()
-    body = params |> Keyword.put(:device_ids, device_ids) |> Enum.into(%{}) |> Poison.encode!()
+    body = params |> Keyword.put(:device_ids, device_ids) |> Enum.into(%{}) |> Jason.encode!()
 
     conn |> Client.put(url, body) |> handle_response()
   end

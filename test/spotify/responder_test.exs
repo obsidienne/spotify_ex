@@ -48,7 +48,7 @@ defmodule Spotify.ResponderTest do
   defp too_many_requests_error(retry_after_value, header_name) do
     {:error,
      %Tesla.Env{
-       body: Poison.encode!(%{error: %{message: "API rate limit exceeded", status: 429}}),
+       body: %{"error" => %{"message" => "API rate limit exceeded", "status" => 429}},
        status: 429,
        headers: [{header_name, Integer.to_string(retry_after_value)}]
      }}
@@ -63,7 +63,7 @@ defmodule Spotify.ResponderTest do
   end
 
   defp error do
-    {:error, %Tesla.Env{body: Poison.encode!(%{error: "foo"}), status: 400}}
+    {:error, %Tesla.Env{body: %{"error" => "foo"}, status: 400}}
   end
 
   defp success_empty_body do
@@ -71,6 +71,6 @@ defmodule Spotify.ResponderTest do
   end
 
   defp success_with_body do
-    {:ok, %Tesla.Env{body: Poison.encode!(%{name: "foo"}), status: 200}}
+    {:ok, %Tesla.Env{body: %{"name" => "foo"}, status: 200}}
   end
 end

@@ -26,16 +26,16 @@ defmodule Spotify.Responder do
           |> Kernel.elem(1)
           |> Integer.parse()
 
-        {message, Map.put(Poison.decode!(body), "meta", %{"retry_after" => retry_after})}
+        {message, Map.put(body, "meta", %{"retry_after" => retry_after})}
       end
 
       def handle_response({message, %Tesla.Env{status: code, body: body}})
           when code in 400..499 do
-        {message, Poison.decode!(body)}
+        {message, body}
       end
 
       def handle_response({:ok, %Tesla.Env{status: _code, body: body}}) do
-        response = body |> Poison.decode!() |> build_response
+        response = body |> build_response
 
         {:ok, response}
       end

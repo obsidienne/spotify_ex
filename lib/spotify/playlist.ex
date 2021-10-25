@@ -338,7 +338,7 @@ defmodule Spotify.Playlist do
   You can also pass the URI param in the request body. If you don't want to
   pass params, use an empty list. See Spotify docs and add_tracks/5.
 
-      body = Poison.encode!(%{ uris: [ "spotify:track:755MBpLqJqCO87PkoyBBQC", "spotify:track:1hsWu8gT2We6OzjhYGAged" ]})
+      body = Jason.encode!(%{ uris: [ "spotify:track:755MBpLqJqCO87PkoyBBQC", "spotify:track:1hsWu8gT2We6OzjhYGAged" ]})
 
       Spotify.Playlist.add_tracks("123", "456", body, [])
       # => {:ok, %{"snapshot_id" => "foo"}}

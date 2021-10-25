@@ -12,12 +12,12 @@ defmodule Spotify.AuthRequest do
     middleware = [
       {Tesla.Middleware.Headers,
        [
-        {"Authorization", "Basic #{Spotify.encoded_credentials()}"},
-        {"Content-Type", "application/x-www-form-urlencoded"}
+         {"Authorization", "Basic #{Spotify.encoded_credentials()}"},
+         {"Content-Type", "application/x-www-form-urlencoded"}
        ]}
     ]
+
     adapter = {Tesla.Adapter.Hackney, [recv_timeout: 30_000]}
     Tesla.client(middleware, adapter)
   end
-
 end
